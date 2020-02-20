@@ -17,15 +17,24 @@ int main()
 	cout << Tree->insert("F");
 	cout << Tree->insert("A");
 	cout << Tree->insert("A");
-	cout << Tree->search("A");
-	cout << Tree->search("F");
-	cout << Tree->search("D");
-	cout << Tree->search("R");
-	cout << Tree->remove("A");
+	//cout << Tree->search("A");
+	//cout << Tree->search("F");
+	//cout << Tree->search("D");
+	//cout << Tree->search("R");
+	//cout << Tree->remove("A");
+	//Tree->list();
+	cout << Tree->parent("F");
+	cout << Tree->parent("E");
+	cout << Tree->child("F");
+	cout << Tree->child("C");
+	cout << Tree->child("B");
+	cout << Tree->child("h");
+	cout << Tree->parent("h");
 
-	cout << Tree->min();
-	cout << Tree->max();
-	Tree->list();
+
+	//cout << Tree->min();
+	//cout << Tree->max();
+	//Tree->list();
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu

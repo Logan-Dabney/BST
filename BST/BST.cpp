@@ -68,32 +68,35 @@ string BST::insert(const string key)
 	}
 }
 
+// Based on the key entered by the user it searches the tree and outputs the node's key and count
+// that matches the key entered. If none match output a blank line.
 string BST::search(const string key)
 {
 	node* p = root;
-	while (p != nullptr)
+	while (p != nullptr) // search list break loop if p becomes nullpointer
 	{
-		if (p->key == key) return p->key + " " + to_string(p->count) + "\n";
-		p = (p->key > key) ? p->leftNode : p->rightNode;
+		if (p->key == key) return p->key + " " + to_string(p->count) + "\n"; // prints key and count of node found
+		p = (p->key > key) ? p->leftNode : p->rightNode; //decides which branch to continue down
 	}
-	return "Not in the tree. Would you like to add? Type insert " + key + " Then press enter.\n";
+	return "\n";
 }
 
+// Goes down the left most to find the smallest value in tree
 string BST::min()
 {
 	node* p = root;
-	node* lag = nullptr;
-
-	while (p != nullptr)
+	node* lag = nullptr; // lag point
+	while (p != nullptr) // while pointer is not null continue to set lag to p and p to it's left child. 
 	{
 		lag = p;
 		p = p->leftNode;
 	}
-	if (lag != nullptr)
+
+	if (lag != nullptr) // if lag isn't null then print out lag node's key
 	{
 		return lag->key + "\n";
 	}
-	return "\n";
+	return "\n"; // iff lag is null print out a blank line
 }
 
 string BST::max()
@@ -118,14 +121,18 @@ void BST::list()
 		cout << "There is nothing in the list.\n";
 	}
 	else {
+		cout << "Set contains:";
 		traverse(root);
+		cout << "\n";
 	}
+	listCount = 1;
 }
 
 void BST::traverse(node* p)
 {
 	if (p->leftNode != nullptr) traverse(p->leftNode);
-	cout << p->key + " " + to_string(p->count) + " ";
+	if (listCount > 1) cout << ",";
+	cout << " (" + to_string(listCount++) + ") " + p->key + " " + to_string(p->count);
 	if (p->rightNode != nullptr) traverse(p->rightNode);
 }
 
@@ -197,50 +204,67 @@ string BST::prev(const string key)
 		p = parent;
 		parent = parent->parentNode;
 	}
+
 	return parent->key + " " + to_string(parent->count) + "\n";
 }
 
 BST::node* BST::branchMax(node* p)
 {
 	node* lag = nullptr;
+
 	while (p != nullptr)
 	{
 		lag = p;
 		p = p->rightNode;
 	}
+
 	if (lag != nullptr)
 	{
 		return lag;
 	}
+
 	return nullptr;
 }
 
+// Finds node containing the key and returns the key of the that node.
+// If the node is the root or is not in the list it returns a blank line 
 string BST::parent(const string key) 
 {
-	node* p = root;
-	while (p->key != key)
+	if (root->key == key) // if the root is the key return blank line
 	{
-		if (p == nullptr)
+		return "\n";
+	}
+
+	node* p = root;
+	while (p->key != key) // iterates through the tree to find the node contianing key, when found exit loop.
+	{
+		if (p == nullptr) // if p falls off tree, key does not exist and return a blank line
 		{
 			return "\n";
 		}
 		p = (p->key > key) ? p->leftNode : p->rightNode;
 	}
-	return p->parentNode->key;
+
+	return p->parentNode->key; // if p is found return parent node
 }
 
+// returns the child(s) of the node with that contains the key entered by the user.
+// If no node is found, then it returns a blank line.
 string BST::child(const string key)
 {
 	node* p = root;
-	while (p->key != key)
+	while (p->key != key) //iterates through the list to find node matching key
 	{
-		if (p == nullptr)
+		if (p == nullptr)// no node was found return blank line 
 		{
 			return "\n";
 		}
 		p = (p->key > key) ? p->leftNode : p->rightNode;
 	}
-	return p->leftNode->key + ", " + p->rightNode->key;
+
+	if (p->leftNode == nullptr) "NULL , " + p->rightNode->key + "\n"; // left child is null
+	else if (p->rightNode == nullptr) p->leftNode->key + ", NULL\n"; // right child is null
+	else return p->leftNode->key + ", " + p->rightNode->key + "\n"; // both children have a key
 }
 
 string BST::remove(const string key)
@@ -257,7 +281,7 @@ string BST::remove(const string key)
 	if (p->count > 1)
 	{
 		p->count--;
-		return p->key + to_string(p->count);
+		return p->key + to_string(p->count) + "\n";
 	}
 	else if (p->leftNode == nullptr && p->rightNode == nullptr) 
 	{
@@ -268,7 +292,7 @@ string BST::remove(const string key)
 
 string BST::help() 
 {
-	return "The commands that can be computed on a BST is insert, remove, search, min, max, next, prev, list, parent, child, help and quit";
+	return "The commands that can be computed on a BST is insert, delete, search, min, max, next, prev, list, parent, child, help and quit";
 }
 
 // min going to be left most value

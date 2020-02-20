@@ -31,6 +31,7 @@ private:
 	};
 	node* root = nullptr;
 
+	int listCount = 1;
 	void traverse(node* p);
 	node* branchMin(node* p);
 	node* branchMax(node* p);
