@@ -9,7 +9,7 @@ public:
 	~BST();
 
 	string insert(const string key);
-	string remove(const string key);
+	void remove(const string key);
 	string search(const string key);
 	string min();
 	string max();

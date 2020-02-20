@@ -148,25 +148,22 @@ void BST::traverse(node* p)
 
 string BST::next(const string key)
 {
-	node* p = root;
+	if (branchMax(root)->key == key) return "\n";
 
-	while (p->key != key) 
+	node* p = root;
+	while (p->key != key)
 	{
 		p = (p->key > key) ? p->leftNode : p->rightNode;
 		if (p == nullptr) return "\n";
 	}
 
-	if (p->key == key && p->rightNode != nullptr)
-	{
-		return branchMin(p->rightNode)->key + "\n";
-	}
+	if (p->rightNode != nullptr) return branchMin(p->rightNode)->key + "\n";
 
 	while (p == p->parentNode->rightNode) {
-		node* lag = p;
 		p = p->parentNode;
-		if (p == nullptr) return lag->key;
+		if (p->parentNode == nullptr) return p->key + "\n";
 	}
-	return p->key + "\n";
+	return p->parentNode->key + "\n";
 }
 
 BST::node* BST::branchMin(node* p)
@@ -186,8 +183,9 @@ BST::node* BST::branchMin(node* p)
 
 string BST::prev(const string key)
 {
-	node* p = root;
+	if (branchMin(root)->key == key) return "\n";
 
+	node* p = root;
 	while (p->key != key)
 	{
 		p = (p->key > key) ? p->leftNode : p->rightNode;
@@ -199,13 +197,19 @@ string BST::prev(const string key)
 		return branchMax(p->leftNode)->key + "\n";
 	}
 
-	node* parent = p;
-	while (parent != nullptr && p == parent->leftNode) {
-		p = parent;
-		parent = parent->parentNode;
+	while (p == p->parentNode->leftNode) {
+		p = p->parentNode;
+		if (p->parentNode == nullptr) return p->key + "\n";
 	}
+	return p->parentNode->key + "\n";
 
-	return parent->key + " " + to_string(parent->count) + "\n";
+	//node* parent = p;
+	//while (parent != nullptr && p == parent->leftNode) {
+	//	p = parent;
+	//	parent = parent->parentNode;
+	//}
+
+	//return parent->key + " " + to_string(parent->count) + "\n";
 }
 
 BST::node* BST::branchMax(node* p)
@@ -270,27 +274,91 @@ string BST::child(const string key)
 	else return p->leftNode->key + ", " + p->rightNode->key + "\n"; // both children have a key
 }
 
-string BST::remove(const string key)
+void BST::remove(const string key)
 {
 	node* p = root;
-	while (p->key != key)
+	while (p->key != key) //iterates through tree to find node once found exit loop
 	{
 		p = (p->key > key) ? p->leftNode : p->rightNode;
 
-		if (p == nullptr)
-		{
-			return key + "-1";
+		if (p == nullptr) { // if node is not found return key -1
+			cout << key + "-1\n";
+			return;
 		}
 	}
-	if (p->count > 1)
+
+	if (p->count > 1) // if the node found has more than 1 in count decrement count and return key with new count
 	{
 		p->count--;
-		return p->key + to_string(p->count) + "\n";
+		cout << p->key + to_string(p->count) + "\n";
 	}
-	else if (p->leftNode == nullptr && p->rightNode == nullptr) 
+	else if (p->leftNode == nullptr && p->rightNode == nullptr) // node has no children
 	{
-		if (p->parentNode->leftNode->key == p->key) p->parentNode->leftNode = nullptr;
-		else p->parentNode->rightNode = nullptr;
+		if (p->parentNode->leftNode == p) p->parentNode->leftNode = nullptr; // if the node is the left child of parent node set equal to null
+		else p->parentNode->rightNode = nullptr; // if the node is the right child of parent node set equal to null
+		cout << p->key + "0\n";
+		p = nullptr;
+	}
+	else if (p->leftNode != nullptr && p->rightNode == nullptr) // left node is not null but right is
+	{
+		if (p->parentNode->leftNode == p)// if the node is the left child of it's parent
+		{
+			p->parentNode->leftNode = p->leftNode; // set the parent's left node to the pointer's left node
+			p->leftNode->parentNode = p->parentNode; // set the pointer's left node parent to the pointer's parent
+			cout << p->key + "0\n";
+			p = nullptr;
+
+		}
+		else // if the node is the right child of it's parent
+		{
+			p->parentNode->rightNode = p->leftNode; // set the parent's right node to the pointers left node
+			p->leftNode->parentNode = p->parentNode; // set the pointer's left node parent to the pointer's parent
+			cout << p->key + "0\n";
+			p = nullptr;
+		}
+	}
+	else if (p->rightNode != nullptr && p->leftNode == nullptr) // right node is not null but left is
+	{
+		if (p->parentNode->leftNode == p)// if the node is the left child of it's parent
+		{
+			p->parentNode->leftNode = p->rightNode; // set the parent's left node to the pointer's left node
+			p->rightNode->parentNode = p->parentNode; // set the pointer's right node parent node to the pointer's parent
+			cout << p->key + "0\n";
+			p = nullptr;
+		}
+		else // if the node is the right child of it's parent
+		{
+			p->parentNode->rightNode = p->rightNode; // set the parent's right node to the pointer's right node
+			p->rightNode->parentNode = p->parentNode; // set the pointer's right node parent node to the pointer's parent
+			cout << p->key + "0\n";
+			p = nullptr;
+		}
+	}
+	else if (p->leftNode != nullptr && p->rightNode != nullptr) // has both children
+	{
+		if (p->rightNode->leftNode == nullptr) // if the successor is the right child of the node (has no left children)
+		{
+			if (p == p->parentNode->rightNode) // if the pointer is the right child of it's parent 
+			{
+				p->parentNode->rightNode = p->rightNode;
+				p->rightNode->parentNode = p->parentNode;
+				p->rightNode->leftNode = p->leftNode;
+				cout << p->key + "0\n";
+				p = nullptr;
+			}
+			else // if the pointer is the left child of it's parent
+			{
+				p->parentNode->leftNode = p->rightNode;
+				p->rightNode->parentNode = p->parentNode;
+				p->rightNode->leftNode = p->leftNode;
+				cout << p->key + "0\n";
+				p = nullptr;
+			}
+		}
+		else 
+		{
+
+		}
 	}
 }
 
