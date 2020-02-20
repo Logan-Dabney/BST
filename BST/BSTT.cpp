@@ -17,6 +17,11 @@ int main()
 	cout << Tree->insert("F");
 	cout << Tree->insert("A");
 	cout << Tree->insert("A");
+	cout << Tree->insert("Z");
+	cout << Tree->insert("J");
+	cout << Tree->insert("I");
+	cout << Tree->insert("H");
+	cout << Tree->insert("G");
 	//cout << Tree->search("A");
 	//cout << Tree->search("F");
 	//cout << Tree->search("D");
@@ -30,6 +35,10 @@ int main()
 	cout << Tree->child("B");
 	cout << Tree->child("h");
 	cout << Tree->parent("h");
+	cout << Tree->next("F");
+	cout << Tree->next("d");
+	cout << Tree->next("Z");
+
 
 
 	//cout << Tree->min();

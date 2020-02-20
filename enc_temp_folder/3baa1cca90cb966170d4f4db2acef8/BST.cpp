@@ -161,12 +161,12 @@ string BST::next(const string key)
 		return branchMin(p->rightNode)->key + "\n";
 	}
 
-	while (p == p->parentNode->rightNode) {
-		node* lag = p;
-		p = p->parentNode;
-		if (p == nullptr) return lag->key;
+	node* parent = p;
+	while (parent != nullptr && p == parent->rightNode) {
+		p = parent;
+		parent = parent->parentNode;
 	}
-	return p->key + "\n";
+	return parent->key + "\n";
 }
 
 BST::node* BST::branchMin(node* p)
