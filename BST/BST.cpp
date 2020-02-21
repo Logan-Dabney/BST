@@ -292,11 +292,31 @@ void BST::remove(const string key)
 		p->count--;
 		cout << p->key + to_string(p->count) + "\n";
 	}
+	else if (p == root)
+	{
+
+		// TO-DO Later
+		//if (root->leftNode == nullptr && root->rightNode == nullptr)
+		//{
+		//	cout << root->key + " 0\n";
+		//	root == nullptr;
+		//}
+		//else if (root->rightNode != nullptr)
+		//{
+		//	if (root->rightNode.leftNode == nullptr) 
+		//	{
+
+		//	}
+
+		//}
+		//
+	}
 	else if (p->leftNode == nullptr && p->rightNode == nullptr) // node has no children
 	{
 		if (p->parentNode->leftNode == p) p->parentNode->leftNode = nullptr; // if the node is the left child of parent node set equal to null
 		else p->parentNode->rightNode = nullptr; // if the node is the right child of parent node set equal to null
-		cout << p->key + "0\n";
+
+		cout << p->key + " 0\n";
 		p = nullptr;
 	}
 	else if (p->leftNode != nullptr && p->rightNode == nullptr) // left node is not null but right is
@@ -305,15 +325,16 @@ void BST::remove(const string key)
 		{
 			p->parentNode->leftNode = p->leftNode; // set the parent's left node to the pointer's left node
 			p->leftNode->parentNode = p->parentNode; // set the pointer's left node parent to the pointer's parent
-			cout << p->key + "0\n";
-			p = nullptr;
 
+			cout << p->key + " 0\n";
+			p = nullptr;
 		}
 		else // if the node is the right child of it's parent
 		{
 			p->parentNode->rightNode = p->leftNode; // set the parent's right node to the pointers left node
 			p->leftNode->parentNode = p->parentNode; // set the pointer's left node parent to the pointer's parent
-			cout << p->key + "0\n";
+
+			cout << p->key + " 0\n";
 			p = nullptr;
 		}
 	}
@@ -323,14 +344,16 @@ void BST::remove(const string key)
 		{
 			p->parentNode->leftNode = p->rightNode; // set the parent's left node to the pointer's left node
 			p->rightNode->parentNode = p->parentNode; // set the pointer's right node parent node to the pointer's parent
-			cout << p->key + "0\n";
+
+			cout << p->key + " 0\n";
 			p = nullptr;
 		}
 		else // if the node is the right child of it's parent
 		{
 			p->parentNode->rightNode = p->rightNode; // set the parent's right node to the pointer's right node
 			p->rightNode->parentNode = p->parentNode; // set the pointer's right node parent node to the pointer's parent
-			cout << p->key + "0\n";
+
+			cout << p->key + " 0\n";
 			p = nullptr;
 		}
 	}
@@ -340,23 +363,42 @@ void BST::remove(const string key)
 		{
 			if (p == p->parentNode->rightNode) // if the pointer is the right child of it's parent 
 			{
-				p->parentNode->rightNode = p->rightNode;
-				p->rightNode->parentNode = p->parentNode;
-				p->rightNode->leftNode = p->leftNode;
-				cout << p->key + "0\n";
+				p->parentNode->rightNode = p->rightNode; // set pointer's parent node right child to pointers right node
+				p->rightNode->parentNode = p->parentNode; // set pointer's right node parent to pointer's parentnode
+				p->rightNode->leftNode = p->leftNode; // set pointer's right node left child to p's left child
+
+				cout << p->key + " 0\n";
 				p = nullptr;
 			}
 			else // if the pointer is the left child of it's parent
 			{
-				p->parentNode->leftNode = p->rightNode;
-				p->rightNode->parentNode = p->parentNode;
-				p->rightNode->leftNode = p->leftNode;
-				cout << p->key + "0\n";
+				p->parentNode->leftNode = p->rightNode; // set pointer's  parent node left child to pointers right node
+				p->rightNode->parentNode = p->parentNode; // set pointer's right node parent to pointer's parent
+				p->rightNode->leftNode = p->leftNode; // set pointer's right node left child to p's left child
+
+				cout << p->key + " 0\n";
 				p = nullptr;
 			}
 		}
-		else 
+		else // if the successor is in the pointer's right child's left branch
 		{
+			cout << p->key + " 0\n";
+
+			node* pSuccessor = branchMin(p->rightNode); // finds pointers successor 
+			p->key = pSuccessor->key; 
+			p->count = pSuccessor->count;
+			
+			if(pSuccessor->rightNode != nullptr) // if the successors right node isn't null
+			{
+				pSuccessor->parentNode->leftNode = pSuccessor->rightNode; // set the successors parent node left child to successors right node
+				pSuccessor->rightNode->parentNode = pSuccessor->parentNode; // set the successors right node parent to successors parent node 
+				pSuccessor = nullptr;
+			}
+			else
+			{
+				pSuccessor->parentNode->leftNode = nullptr;
+				pSuccessor = nullptr;
+			}
 
 		}
 	}
