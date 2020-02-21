@@ -7,7 +7,6 @@ class BST
 public:
 	BST();
 	~BST();
-
 	string insert(const string key);
 	void remove(const string key);
 	string search(const string key);
@@ -19,7 +18,7 @@ public:
 	string parent(const string key);
 	string child(const string key);
 	string help();
-	//void quit();
+
 private:
 	struct node 
 	{
@@ -32,9 +31,10 @@ private:
 	node* root = nullptr;
 
 	int listCount = 1;
+
 	void traverse(node* p);
 	node* branchMin(node* p);
 	node* branchMax(node* p);
-
+	node* findNode(const string key);
 };
 
