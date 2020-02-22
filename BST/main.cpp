@@ -55,4 +55,5 @@ int main()
 	Tree->remove("F");
 	Tree->remove("B");
 	Tree->remove("a");
+	Tree->~BST();
 }
