@@ -1,5 +1,15 @@
-// Author:    Dabney Logan, University of Toledo
-// Date:      Feb 17, 2018
+/* 
+==========================================================================================================
+	This code implements a binary search tree that contains nodes. Each node has a key, leftnode, 
+	rightnode, parentnode and count. The nodes allow for forward and backwards stepping. The key allows
+	a node to be identified and the count keeps track of the amount of times a node has been entered 
+	onto the tree. All this allows various fuhnctions to be enacted on a binary search tree. They are 
+	detailed below
+
+	Author:    Dabney Logan, University of Toledo
+	Date:      Feb 17, 2018 
+===========================================================================================================
+*/
 
 #include "BST.h"
 #include <iostream>
@@ -18,7 +28,7 @@ BST::~BST()
 
 
 // This function inserts nodes on a Binary search tree. It runs through
-// all the possiblities (no root, left branch of parent node, right branch of parent node)
+// all the possiblities: no root, left branch of parent node, right branch of parent node
 string BST::insert(const string key)
 {
 	node* p = root;
@@ -111,11 +121,11 @@ string BST::max()
 }
 
 
-//iterates through the list and prints all node's in order 
+// Iterates through the list and prints all node's in order 
 void BST::list()
 {
 	if (root == nullptr) cout << "Set is empty\n";		// if root starts off null returns Set is empty
-	else 
+	else
 	{
 		cout << "Set contains:";
 		inOrderTraversal(root);		// called inOrderTraversal
@@ -126,7 +136,8 @@ void BST::list()
 
 
 // Based on key entered by user this function will return the next key in the tree. 
-// Also takes into acount for possible cases that would cause errors.
+// Also takes into acount for possible cases that would cause errors: if pointer starts off null,
+// if it is tree max, if it's right node isnt null and if it's right node is null
 string BST::next(const string key)
 {
 	node* p = findNode(key);
@@ -145,7 +156,8 @@ string BST::next(const string key)
 
 
 // Based on a key entered by user this function will return the previous key in the tree. 
-// Also takes into acount for possible cases that would cause errors.
+// Also takes into acount for possible cases that would cause errors: if pointer starts off null,
+// if it is tree min, if it's left node isn't null and if the left node is null
 string BST::prev(const string key)
 {
 
@@ -215,66 +227,14 @@ void BST::remove(const string key)
 			delete p;
 		}
 	}
-	else if (p->leftNode != nullptr && p->rightNode == nullptr)		// left node is not null but right is
-	{
-		if (p == root) 
-		{
-			cout << root->key + " 0\n";
-
-			root = root->leftNode;
-			root->parentNode = nullptr;
-		}
-		else if (p->parentNode->leftNode == p)			// if the pointer node is the left child of it's parent
-		{
-			p->parentNode->leftNode = p->leftNode;		// set the parent's left node to the pointer's left node
-			p->leftNode->parentNode = p->parentNode;	// set the pointer's left node parent to the pointer's parent
-
-			cout << p->key + " 0\n";
-			delete p;
-		}
-		else											// if the node is the right child of it's parent
-		{
-			p->parentNode->rightNode = p->leftNode;		// set the parent's right node to the pointers left node
-			p->leftNode->parentNode = p->parentNode;	// set the pointer's left node parent to the pointer's parent
-
-			cout << p->key + " 0\n";
-			delete p;
-		}
-	}
-	else if (p->rightNode != nullptr && p->leftNode == nullptr) // right node is not null but left is
-	{
-		if (p == root) 
-		{
-			cout << root->key + " 0\n";
-
-			root = root->rightNode;
-			root->parentNode = nullptr;
-		}
-		else if (p->parentNode->leftNode == p)			// if the pointer node is the left child of it's parent
-		{
-			p->parentNode->leftNode = p->rightNode;		// set the parent's left node to the pointer's left node
-			p->rightNode->parentNode = p->parentNode;	// set the pointer's right node parent node to the pointer's parent
-
-			cout << p->key + " 0\n";
-			delete p;
-		}
-		else											// if the node is the right child of it's parent
-		{
-			p->parentNode->rightNode = p->rightNode;	// set the parent's right node to the pointer's right node
-			p->rightNode->parentNode = p->parentNode;	// set the pointer's right node parent node to the pointer's parent
-
-			cout << p->key + " 0\n";
-			delete p;
-		}
-	}
 	else if (p->leftNode != nullptr && p->rightNode != nullptr) // has both children
 	{
 		if (p->rightNode->leftNode == nullptr)	// if the successor is the right child of the node (has no left children)
 		{
-			if (p == root) 
+			if (p == root)
 			{
 				cout << root->key + " 0\n";
-				
+
 				root->rightNode->leftNode = root->leftNode;
 				root = root->rightNode;
 				root->leftNode->parentNode = root;
@@ -296,7 +256,7 @@ void BST::remove(const string key)
 				p->rightNode->parentNode = p->parentNode;	// set pointer's right node parent to pointer's parent
 				p->rightNode->leftNode = p->leftNode;		// set pointer's right node left child to p's left child
 				p->leftNode->parentNode = p->rightNode;		// set pointers left childs parent to p's right child
-				
+
 				cout << p->key + " 0\n";
 				delete p;
 			}
@@ -320,7 +280,34 @@ void BST::remove(const string key)
 				pSuccessor->parentNode->leftNode = nullptr;
 				delete pSuccessor;
 			}
+		}
+	}
+	else if (p->leftNode != nullptr || p->rightNode != nullptr) // if there is only one child
+	{
+		node* childNode = (p->leftNode == nullptr) ? p->rightNode : p->leftNode; // finds which child it is and sets it to a child node to be used later
 
+		if (p == root) // if it's the root print that it is being delete then set root to the child and it's parent to nullpter
+		{
+			cout << root->key + " 0\n";
+
+			root = childNode;
+			root->parentNode = nullptr;
+		}
+		else if (p->parentNode->leftNode == p)			// if the pointer node is the left child of it's parent
+		{
+			p->parentNode->leftNode = childNode;		// set the parent's left node to the pointer's child
+			childNode->parentNode = p->parentNode;		// set the pointers child's parent node to the pointer's parent
+
+			cout << p->key + " 0\n";
+			delete p;
+		}
+		else											// if the node is the right child of it's parent
+		{
+			p->parentNode->rightNode = childNode;	// set the parent's right node to the pointer's child
+			childNode->parentNode = p->parentNode;	// set the pointer's child parent node to the pointer's parent
+
+			cout << p->key + " 0\n";
+			delete p;
 		}
 	}
 }
@@ -394,7 +381,7 @@ void BST::inOrderTraversal(node* p)
 }
 
 // makes one pass through the list returning all nodes in order but passes the root last
-BST::node* BST::postTraversal(node* p) 
+BST::node* BST::postTraversal(node* p)
 {
 	if (p != nullptr)
 	{
@@ -538,4 +525,57 @@ BST::node* BST::postTraversal(node* p)
 
 	//}
 	//
+	//}
+
+	//else if (p->leftNode != nullptr && p->rightNode == nullptr)		// left node is not null but right is
+	//{
+	//	if (p == root) 
+	//	{
+	//		cout << root->key + " 0\n";
+
+	//		root = root->leftNode;
+	//		root->parentNode = nullptr;
+	//	}
+	//	else if (p->parentNode->leftNode == p)			// if the pointer node is the left child of it's parent
+	//	{
+	//		p->parentNode->leftNode = p->leftNode;		// set the parent's left node to the pointer's left node
+	//		p->leftNode->parentNode = p->parentNode;	// set the pointer's left node parent to the pointer's parent
+
+	//		cout << p->key + " 0\n";
+	//		delete p;
+	//	}
+	//	else											// if the node is the right child of it's parent
+	//	{
+	//		p->parentNode->rightNode = p->leftNode;		// set the parent's right node to the pointers left node
+	//		p->leftNode->parentNode = p->parentNode;	// set the pointer's left node parent to the pointer's parent
+
+	//		cout << p->key + " 0\n";
+	//		delete p;
+	//	}
+	//}
+	//else if (p->rightNode != nullptr && p->leftNode == nullptr) // right node is not null but left is
+	//{
+	//	if (p == root) 
+	//	{
+	//		cout << root->key + " 0\n";
+
+	//		root = root->rightNode;
+	//		root->parentNode = nullptr;
+	//	}
+	//	else if (p->parentNode->leftNode == p)			// if the pointer node is the left child of it's parent
+	//	{
+	//		p->parentNode->leftNode = p->rightNode;		// set the parent's left node to the pointer's left node
+	//		p->rightNode->parentNode = p->parentNode;	// set the pointer's right node parent node to the pointer's parent
+
+	//		cout << p->key + " 0\n";
+	//		delete p;
+	//	}
+	//	else											// if the node is the right child of it's parent
+	//	{
+	//		p->parentNode->rightNode = p->rightNode;	// set the parent's right node to the pointer's right node
+	//		p->rightNode->parentNode = p->parentNode;	// set the pointer's right node parent node to the pointer's parent
+
+	//		cout << p->key + " 0\n";
+	//		delete p;
+	//	}
 	//}
