@@ -1,3 +1,6 @@
+// Author:    Dabney Logan, University of Toledo
+// Date:      Feb 17, 2018
+
 #pragma once
 #include <string>
 using namespace std;
@@ -32,7 +35,8 @@ private:
 
 	int listCount = 1;
 
-	void traverse(node* p);
+	void inOrderTraversal(node* p);
+	node* postTraversal(node* p);
 	node* branchMin(node* p);
 	node* branchMax(node* p);
 	node* findNode(const string key);

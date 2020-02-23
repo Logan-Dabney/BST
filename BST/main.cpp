@@ -1,7 +1,8 @@
-// BST.cpp : This file contains the 'main' function. Program execution begins and ends there.
+// Main.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
 #include <iostream>
+#include <string>
 #include "BST.h"
 
 using namespace std;
@@ -9,51 +10,47 @@ using namespace std;
 int main()
 {
 	BST* Tree = new BST();
+	string command, key;
 
-	cout << Tree->insert("E");
-	cout << Tree->insert("B");
-	cout << Tree->insert("C");
-	cout << Tree->insert("D");
-	cout << Tree->insert("F");
-	cout << Tree->insert("A");
-	cout << Tree->insert("A");
-	cout << Tree->insert("Z");
-	cout << Tree->insert("J");
-	cout << Tree->insert("I");
-	cout << Tree->insert("H");
-	cout << Tree->insert("G");
+	while (command != "quit")	// while command isn't quit, run the program
+	{
+		getline(cin, command);	// get the line entered by the user 
 
-	cout << Tree->search("A");
-	cout << Tree->search("F");
-	cout << Tree->search("D");
-	cout << Tree->search("R");
-	Tree->list();
-	cout << Tree->parent("F");
-	cout << Tree->parent("E");
-	cout << Tree->child("F");
-	cout << Tree->child("C");
-	cout << Tree->child("B");
-	cout << Tree->child("h");
-	cout << Tree->parent("h");
-	cout << Tree->next("F");
-	cout << Tree->next("d");
-	cout << Tree->next("Z");
-	cout << Tree->prev("E");
-	cout << Tree->prev("A");
-	cout << Tree->prev("G");
+		if (command != "") 
+		{
+			int i;
+			for (i = 0; i < command.length(); i++)		// iterate through command entered
+			{
+				command.at(i) = tolower(command.at(i));	//set command to lower case
 
+				if (command.at(i) == ' ') {				// if there is a space in command entered
+					key = command.substr(i + 1, ((int)command.length() - 1) - i);	// obtains key from command that is after the space
+					command = command.substr(0, i);									// makes command to everything before the space. Ultimately changing
+				}																	// command.length() and forcing for loop to stop
+			}
 
-	cout << Tree->min();
-	cout << Tree->max();
-	Tree->list();
+			if (key != "") // if key has a value test the following command options
+			{
+				if (command == "insert") cout << Tree->insert(key);
+				else if (command == "search") cout << Tree->search(key);
+				else if (command == "delete") Tree->remove(key);
+				else if (command == "prev") cout << Tree->prev(key);
+				else if (command == "next") cout << Tree->next(key);
+				else if (command == "parent") cout << Tree->parent(key);
+				else if (command == "child") cout << Tree->child(key);
+			}
+			else // if is doesn't test these command options
+			{
+				if (command == "min") cout << Tree->min();
+				else if (command == "max") cout << Tree->max();
+				else if (command == "list") Tree->list();
+				else if (command == "help") cout << Tree->help();
+			}
+		}
 
-	cout << Tree->search("A");
-	Tree->remove("E");
-	Tree->remove("d");
-	Tree->remove("D");
-	Tree->remove("Z");
-	Tree->remove("F");
-	Tree->remove("B");
-	Tree->remove("a");
-	Tree->~BST();
+		key = ""; // set key equal to nothing 
+	}
+
+	Tree->~BST(); // once command equals quit the loop is exited and the tree destructor is executed 
+	return 0;
 }
